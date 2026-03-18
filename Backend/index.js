@@ -4,14 +4,12 @@ const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors()); // In production, Vercel handles routing, we can simplify this or use specific origins
 app.use(express.json());
 
-// ✅ MongoDB connection (FIXED)
+// ✅ MongoDB connection
 mongoose
-  .connect(
-    "mongodb+srv://aswinbino004:Aswinmohan20@cluster0.fuyj53q.mongodb.net/passkey?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(process.env.MONGODB_URI || "mongodb+srv://aswinbino004:Aswinmohan20@cluster0.fuyj53q.mongodb.net/passkey?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log("Connected to DB"))
   .catch((err) => console.error("DB connection error:", err));
 
@@ -67,7 +65,11 @@ app.post("/sendmail", async (req, res) => {
 });
 
 
-app.listen(5000, () => {
-  console.log("🚀 Server running on http://localhost:5000");
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(5000, () => {
+    console.log("🚀 Server running on http://localhost:5000");
+  });
+}
+
+module.exports = app;
 

@@ -47,7 +47,7 @@ function App() {
     setStatus(true);
 
     axios
-      .post("http://localhost:5000/sendmail", { msg, emailList })
+      .post("/api/sendmail", { msg, emailList })
       .then(() => {
         alert("Emails sent successfully");
         setStatus(false);
